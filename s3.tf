@@ -1,5 +1,5 @@
 #create s3 bucket
-resource "aws_s3_bucket" "mybucket-1157" {
+resource "aws_s3_bucket" "mybucket" {
   bucket = var.bucketname
 }
 resource "aws_s3_bucket_ownership_controls" "example" {
