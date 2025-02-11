@@ -1,6 +1,11 @@
-# Create S3 Bucket
+# Generate a unique suffix for the bucket name
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
+# Create S3 Bucket with a unique name
 resource "aws_s3_bucket" "cdacprojectg5" {
-  bucket = var.bucketname
+  bucket = "cdacprojectg5-${random_id.suffix.hex}"
 }
 
 # Set ownership controls
@@ -75,5 +80,4 @@ resource "aws_s3_bucket_website_configuration" "website" {
   error_document {
     key = "error.html"
   }
-  depends_on = [aws_s3_bucket_acl.example]
 }
