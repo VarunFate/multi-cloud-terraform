@@ -1,93 +1,28 @@
-provider "aws" {
-  region = "ap-south-1" # Change this if needed
-}
-
-# Generate a unique suffix for the bucket name
-resource "random_id" "suffix" {
-  byte_length = 4
-}
-
-# Create S3 Bucket with a unique name
-resource "aws_s3_bucket" "cdacprojectg5" {
-  bucket = "cdacprojectg5-${random_id.suffix.hex}"
-}
-
-# Set ownership controls (BucketOwnerEnforced disables ACLs)
-resource "aws_s3_bucket_ownership_controls" "example" {
-  bucket = aws_s3_bucket.cdacprojectg5.id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
-# Public Access Block (Disabling restrictions for website hosting)
-resource "aws_s3_bucket_public_access_block" "example" {
-  bucket = aws_s3_bucket.cdacprojectg5.id
-  block_public_acls       = true
-  block_public_policy     = false
-  ignore_public_acls      = true
-  restrict_public_buckets = false
-}
-
-# Set Bucket Policy for public access
-resource "aws_s3_bucket_policy" "public_read" {
-  bucket = aws_s3_bucket.cdacprojectg5.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.cdacprojectg5.id}/*"
-    }
-  ]
-}
-EOF
-}
-
-# Upload index.html
-resource "aws_s3_object" "index" {
-  bucket       = aws_s3_bucket.cdacprojectg5.id
-  key          = "index.html"
-  source       = "index.html"
-  content_type = "text/html"
-}
-
-# Upload error.html
-resource "aws_s3_object" "error" {
-  bucket       = aws_s3_bucket.cdacprojectg5.id
-  key          = "error.html"
-  source       = "error.html"
-  content_type = "text/html"
-}
-
-# Upload style.css
-resource "aws_s3_object" "style" {
-  bucket       = aws_s3_bucket.cdacprojectg5.id
-  key          = "style.css"
-  source       = "style.css"
-  content_type = "text/css"
-}
-
-# Upload script.js
-resource "aws_s3_object" "script" {
-  bucket       = aws_s3_bucket.cdacprojectg5.id
-  key          = "script.js"
-  source       = "script.js"
-  content_type = "text/javascript"
-}
-
-# Enable S3 Static Website Hosting
-resource "aws_s3_bucket_website_configuration" "website" {
-  bucket = aws_s3_bucket.cdacprojectg5.id
-
-  index_document {
-    suffix = "index.html"
-  }
-
-  error_document {
-    key = "error.html"
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" action="#" method="POST">
+            <div class="input-container">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-container">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="button-container">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
